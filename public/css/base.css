@@ -1,0 +1,96 @@
+body {
+  background: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+  padding: 30px;
+}
+
+a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+  font-size: 12px;
+  margin: 0 2px;
+  padding: 0 5px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+p, ul {
+  margin: 15px 0;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+.instrument-dropdown-style {
+  margin-top: 30px;
+}
+
+.selectors-style {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.chord-name-style{
+  margin-top: 55px;
+}
+
+.interval-button-group {
+ margin-bottom: 17px;
+}
+
+.chord-grid-item-style {
+  margin-top: 10px;
+}
+
+.chord-grid-style {
+  margin-top: 20px;
+}
+
+.tab-row-style {
+  padding-left: 17px;
+  padding-right: 17px;
+}
+
+.tab-row-item-style {
+  font-size: 85%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
