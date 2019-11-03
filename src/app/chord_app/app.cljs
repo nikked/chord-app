@@ -4,6 +4,7 @@
             [cljs.reader :refer [read-string]]
             [app.chord-app.chord-recognizer :refer [chord-recognizer]]
             [app.chord-app.chord-generator :refer [chord-generator]]
+            ["@tombatossals/react-chords/lib/Chord" :default guitar-chord-tab]
             ))
 
 (def notes ["C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "Bb" "H"])
@@ -147,12 +148,51 @@
      ]
     )
 
-  (defn chord-grid-item [value]
+
+  (defn paint-tab-chart [renderable-tab base-fret]
+    [:> guitar-chord-tab {:chord (if (> base-fret 1 )
+                                     {:frets renderable-tab :baseFret base-fret}
+                                   {:frets renderable-tab}
+                                   )
+                          :instrument {
+                                       :strings 6
+                                       :fretsOnChord 5
+                                       :name "Guitar"
+                                       :tunings {:standard []}
+                                       }}]
+
+    )
+
+
+  (defn render-tab [chord]
+    (let [tab-as-int (map #(if (or (= % "-") (= % "0")) 99
+                            (read-string %)) (:tab chord))]
+      (let [min-finger (apply min (filter #(not (= 99 %)) tab-as-int))
+            max-finger (apply max (filter #(not (= 99 %)) tab-as-int))]
+        (if (< max-finger 4)
+            (paint-tab-chart (map #(if (= % "-") -1
+                                    (read-string %))
+                                  (:tab chord) ) 0)
+
+          (paint-tab-chart (map #(if (= % "-") -1
+                                  (max (- (read-string %) min-finger -1) 0))
+                                (:tab chord) ) min-finger)
+          )
+        )
+
+      )
+
+    )
+
+
+
+  (defn chord-grid-item [chord]
     [:div {:class "card chord-grid-item-style"}
      [:div {:class "card-body"}
-      (tab-row (:notes value))
-      (tab-row (:intervals value))
-      (tab-row (:tab value))
+      (tab-row (:notes chord))
+      (tab-row (:intervals chord))
+      (tab-row (:tab chord))
+      [render-tab chord]
       ]
      ]
     )
@@ -164,6 +204,7 @@
        ]
       )
     )
+
 
   (defn app []
     [:div {:class "container"}

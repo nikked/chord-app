@@ -41,7 +41,7 @@
         new-notes))))
 
 (defn chord-is-valid [target-chord instrument result-chord]
-  (and (> 5
+  (and (> 4
           (- (apply max result-chord)
              (apply min (filter #(> % 0) (conj result-chord 100)))))
        (= (count (filter #(>= % 0 ) result-chord)) (count (get target-chord :intervals)))
