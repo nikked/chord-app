@@ -147,10 +147,26 @@
            (conj result "-")))))))
 
 
+(defn get-note-numbers [chord-tab instrument]
+  (loop [iteration 0
+         result []]
+    (if (>= iteration (count (:intervals instrument)))
+        result
+      (let [tab-number (get chord-tab iteration)]
+        (recur
+         (inc iteration)
+         (if (and tab-number (> tab-number -1))
+             (conj result (+ (:root instrument)
+                             (get (get instrument :intervals) iteration)
+                             (get chord-tab iteration))) result
+           ))))))
+
+
   (defn chords-coll-formatter [chords-coll instrument target-chord]
     (reduce
      (fn [result chord-tab]
-       (conj result {:intervals (get-tab-intervals chord-tab instrument target-chord)
+       (conj result {:note-numbers (get-note-numbers chord-tab instrument)
+                     :intervals (get-tab-intervals chord-tab instrument target-chord)
                      :notes (get-tab-notes chord-tab instrument)
                      :tab (format-tab chord-tab instrument)})
        )

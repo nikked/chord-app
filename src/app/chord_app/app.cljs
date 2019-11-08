@@ -174,8 +174,15 @@
                                 (max (- (read-string %) min-finger -1) 0))
                               (:tab chord) ) min-finger)))))
 
+(defn on-chord-item-click [chord]
+  (let [notes (sort (map #(+ % (:root chord)) (:note-numbers chord)))]
+    (play-chord notes)
+    ))
+
+
 (defn chord-grid-item [chord]
-  [:div {:class "card chord-grid-item-style"}
+  [:div {:class "card chord-grid-item-style"
+         :on-click #(on-chord-item-click chord)}
    [:div {:class "card-body"}
     (tab-row (:notes chord))
     (tab-row (:intervals chord))
@@ -197,13 +204,13 @@
   (let [timeout (atom 0)]
     (doseq [note notes]
       (js/setTimeout
-       #(.triggerAttackRelease (get-synth) (get tone-js-pitches (+ note 12)) "1")
+       #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
        @timeout)
-      (swap! timeout #(+ 180 %)))))
+      (swap! timeout #(+ 110 %)))))
 
 
 (defn play-default-chord []
-  (let [notes (sort (map #(+ % (:root @chord-data)) (:intervals @chord-data)))]
+  (let [notes (sort (map #(+ 12 % (:root @chord-data)) (:intervals @chord-data)))]
     (play-chord notes)))
 
 
