@@ -4,10 +4,10 @@
             [cljs.reader :refer [read-string]]
             [app.chord-app.chord-recognizer :refer [chord-recognizer]]
             [app.chord-app.chord-generator :refer [chord-generator]]
+            [app.chord-app.consts :refer [tone-js-pitches notes]]
             ["@tombatossals/react-chords/lib/Chord" :default guitar-chord-tab]
+            ["tone" :as tone]
             ))
-
-(def notes ["C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "Bb" "H"])
 
 (def chord-data (r/atom  {:intervals #{0 3 7}
                           :root 4}))
@@ -205,8 +205,18 @@
       )
     )
 
+  (defn get-synth []
+    (let [synth (tone/Synth.)]
+      (.toMaster synth)))
+
+  (defn play-chord []
+    (doseq [note (map #(+ % (:root @chord-data)) (:intervals @chord-data))]
+      (.triggerAttackRelease (get-synth) (get tone-js-pitches (+ note 12)) "1")
+      )
+    )
 
   (defn app []
+    (play-chord)
     [:div {:class "container"}
      [:div {:class "row"}
       [chord-name]
