@@ -11,6 +11,8 @@
 (def chord-data (r/atom  {:intervals #{0 3 7}
                           :root 4}))
 
+(def enable-sound (r/atom false))
+
 (def instrument-data (r/atom  {:name "Standard guitar"
                                :intervals [0 5 10 15 19 24]
                                :root 4}))
@@ -201,12 +203,14 @@
     (.toMaster synth)))
 
 (defn play-chord [notes]
-  (let [timeout (atom 0)]
-    (doseq [note notes]
-      (js/setTimeout
-       #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
-       @timeout)
-      (swap! timeout #(+ 110 %)))))
+  (if @enable-sound
+      (let [timeout (atom 0)]
+        (doseq [note notes]
+          (js/setTimeout
+           #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
+           @timeout)
+          (swap! timeout #(+ 110 %))))
+    ))
 
 
 (defn play-default-chord []
@@ -214,9 +218,26 @@
     (play-chord notes)))
 
 
+(defn enable-sound-button-on-click []
+  (reset! enable-sound (not @enable-sound))
+  )
+
+(defn enable-sound-button []
+  (if @enable-sound
+      [:button {:type "button"
+                :class "btn btn-primary"
+                :onClick #(enable-sound-button-on-click)}
+       "Disable sound"]
+    [:button {:type "button"
+              :class "btn btn-primary"
+              :onClick #(enable-sound-button-on-click)}
+     "Enable sound"]))
+
+
 (defn app []
   (play-default-chord)
   [:div {:class "container"}
+   (enable-sound-button)
    [:div {:class "row"}
     [chord-name]
     [selectors]
