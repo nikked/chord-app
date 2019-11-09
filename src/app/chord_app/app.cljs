@@ -15,8 +15,8 @@
 (def instrument-data (r/atom  (:std_guitar instruments)))
 
 (defn play-default-chord []
-  (let [notes (sort (map #(+ 12 % (:root @chord-data)) (:intervals @chord-data)))]
-    (if @enable-sound (play-chord notes))))
+  (let [chord-notes (sort (map #(+ 12 % (:root @chord-data)) (:intervals @chord-data)))]
+    (if @enable-sound (play-chord chord-notes))))
 
 (defn handle-note-dropdown-on-click [new-root]
   (let [intervals (:intervals @chord-data)]
@@ -36,8 +36,8 @@
                           :root root}))))
 
 (defn handle-chord-item-on-click [chord]
-  (let [notes (sort (map #(+ % (:root chord)) (:note-numbers chord)))]
-    (if @enable-sound (play-chord notes))
+  (let [chord-notes (sort (map #(+ % (:root chord)) (:note-numbers chord)))]
+    (if @enable-sound (play-chord chord-notes))
     ))
 
 (defn handle-enable-sound-button-on-click []
