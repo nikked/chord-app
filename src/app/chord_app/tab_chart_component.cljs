@@ -1,4 +1,4 @@
-(ns app.chord-app.tab-chart
+(ns app.chord-app.tab-chart-component
   (:require [cljs.reader :refer [read-string]]
             ["@tombatossals/react-chords/lib/Chord" :default guitar-chord-tab]))
 

@@ -3,7 +3,7 @@
             [app.chord-app.chord-recognizer :refer [chord-recognizer]]
             [app.chord-app.chord-generator :refer [chord-generator]]
             [app.chord-app.play-chord-sound :refer [play-chord]]
-            [app.chord-app.tab-chart :refer [render-tab-chart]]
+            [app.chord-app.tab-chart-component :refer [render-tab-chart]]
             [app.chord-app.consts :refer [notes instruments]]
             ))
 
