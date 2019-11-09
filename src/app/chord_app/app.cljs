@@ -35,12 +35,12 @@
       (reset! chord-data {:intervals (conj intervals clicked-interval)
                           :root root}))))
 
-(defn chord-item-on-click [chord]
+(defn handle-chord-item-on-click [chord]
   (let [notes (sort (map #(+ % (:root chord)) (:note-numbers chord)))]
     (if @enable-sound (play-chord notes))
     ))
 
-(defn enable-sound-button-on-click []
+(defn handle-enable-sound-button-on-click []
   (reset! enable-sound (not @enable-sound))
   )
 
@@ -141,7 +141,7 @@
 
 (defn render-chord-grid-item [chord]
   [:div {:class "card chord-grid-item-style"
-         :on-click #(chord-item-on-click chord)}
+         :on-click #(handle-chord-item-on-click chord)}
    [:div {:class "card-body"}
     (render-tab-row (:notes chord))
     (render-tab-row (:intervals chord))
@@ -159,11 +159,11 @@
   (if @enable-sound
       [:button {:type "button"
                 :class "btn btn-primary"
-                :onClick #(enable-sound-button-on-click)}
+                :onClick #(handle-enable-sound-button-on-click)}
        "Disable sound"]
     [:button {:type "button"
               :class "btn btn-primary"
-              :onClick #(enable-sound-button-on-click)}
+              :onClick #(handle-enable-sound-button-on-click)}
      "Enable sound"]))
 
 
