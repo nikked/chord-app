@@ -4,23 +4,20 @@
             [cljs.reader :refer [read-string]]
             [app.chord-app.chord-recognizer :refer [chord-recognizer]]
             [app.chord-app.chord-generator :refer [chord-generator]]
-            [app.chord-app.consts :refer [tone-js-pitches notes]]
+            [app.chord-app.consts :refer [tone-js-pitches notes instruments]]
             ["@tombatossals/react-chords/lib/Chord" :default guitar-chord-tab]
             ["tone" :as tone]
             ))
-(def chord-data (r/atom  {:intervals #{0 3 7}
+(def chord-data (r/atom  {:intervals #{0 7 2 10}
                           :root 4}))
 
 (def enable-sound (r/atom false))
 
-(def instrument-data (r/atom  {:name "Standard guitar"
-                               :intervals [0 5 10 15 19 24]
-                               :root 4}))
+(def instrument-data (r/atom  (:std_guitar instruments)))
 
 (defn get-synth []
   (let [synth (tone/Synth.)]
     (.toMaster synth)))
-
 
 (defn play-chord [notes]
   (if @enable-sound
@@ -36,19 +33,9 @@
   (let [intervals (:intervals @chord-data)]
     (reset! chord-data {:intervals intervals
                         :root new-root})))
-(defn handle-instrument-dropdown-on-click [new-instrument]
-  (let [instruments-menu
-        {"std_guitar" {:name "Standard guitar"
-                       :intervals [0 5 10 15 19 24]
-                       :root 4}
-         "std_bass" {:name "Standard bass"
-                     :intervals [0 5 10 15]
-                     :root 4}
 
-         "drop_d_guitar" {:name "Drop D guitar"
-                          :intervals [0 7 12 17 21 26]
-                          :root 2}}]
-    (reset! instrument-data (get instruments-menu new-instrument))))
+(defn handle-instrument-dropdown-on-click [new-instrument]
+  (reset! instrument-data (get instruments new-instrument)))
 
 (defn handle-interval-on-click [clicked-interval]
   (let [intervals (:intervals @chord-data)
@@ -86,9 +73,9 @@
     [:div {
            :class "dropdown-menu"
            :aria-labelledby "dropdownMenuButton"}
-     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click "std_guitar")} "Standard guitar"]
-     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click "std_bass")} "Standard bass"]
-     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click "drop_d_guitar")} "Drop D guitar"]]]])
+     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click :std_guitar)} "Standard guitar"]
+     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click :std_bass)} "Standard bass"]
+     [:a {:class "dropdown-item" :on-click #(handle-instrument-dropdown-on-click :drop_d_guitar)} "Drop D guitar"]]]])
 
 
 
@@ -175,7 +162,6 @@
                                      :name "Guitar"
                                      :tunings {:standard []}
                                      }}])
-
 
 (defn render-tab [chord]
   (let [tab-as-int (map #(if (or (= % "-") (= % "0")) 99

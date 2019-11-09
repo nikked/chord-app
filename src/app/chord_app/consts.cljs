@@ -10,3 +10,17 @@
    ])
 
 (def notes ["C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "Bb" "H"])
+
+(def intervals ["I" "II" "II" "III" "III" "IV" "Tr" "V" "VI" "VI" "VII" "VII"])
+
+(def instruments {
+         :std_guitar {:name "Standard guitar"
+                       :intervals [0 5 10 15 19 24]
+                       :root 4}
+         :std_bass {:name "Standard bass"
+                     :intervals [0 5 10 15]
+                     :root 4}
+
+         :drop_d_guitar {:name "Drop D guitar"
+                          :intervals [0 7 12 17 21 26]
+                          :root 2}})
