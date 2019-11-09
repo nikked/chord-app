@@ -1,12 +1,10 @@
 (ns app.chord-app.app
-  (:require [reagent.core :as r :refer [render]]
-            [clojure.string :as s :refer [trim blank?]]
-            [cljs.reader :refer [read-string]]
+  (:require [reagent.core :as r]
             [app.chord-app.chord-recognizer :refer [chord-recognizer]]
             [app.chord-app.chord-generator :refer [chord-generator]]
-            [app.chord-app.consts :refer [tone-js-pitches notes instruments]]
-            ["@tombatossals/react-chords/lib/Chord" :default guitar-chord-tab]
-            ["tone" :as tone]
+            [app.chord-app.play-chord-sound :refer [play-chord]]
+            [app.chord-app.tab-chart :refer [render-tab-chart]]
+            [app.chord-app.consts :refer [notes instruments]]
             ))
 
 (def chord-data (r/atom  {:intervals #{0 7 2 10}
@@ -16,23 +14,9 @@
 
 (def instrument-data (r/atom  (:std_guitar instruments)))
 
-(defn get-synth []
-  (let [synth (tone/Synth.)]
-    (.toMaster synth)))
-
-(defn play-chord [notes]
-  (if @enable-sound
-      (let [timeout (atom 0)]
-        (doseq [note notes]
-          (js/setTimeout
-           #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
-           @timeout)
-          (swap! timeout #(+ 110 %))))
-    ))
-
 (defn play-default-chord []
   (let [notes (sort (map #(+ 12 % (:root @chord-data)) (:intervals @chord-data)))]
-    (play-chord notes)))
+    (if @enable-sound (play-chord notes))))
 
 (defn handle-note-dropdown-on-click [new-root]
   (let [intervals (:intervals @chord-data)]
@@ -53,7 +37,7 @@
 
 (defn chord-item-on-click [chord]
   (let [notes (sort (map #(+ % (:root chord)) (:note-numbers chord)))]
-    (play-chord notes)
+    (if @enable-sound (play-chord notes))
     ))
 
 (defn enable-sound-button-on-click []
@@ -155,34 +139,6 @@
    ]
   )
 
-
-(defn render-tab-chart [renderable-tab base-fret]
-  [:> guitar-chord-tab {:chord (if (> base-fret 1 )
-                                   {:frets renderable-tab :baseFret base-fret}
-                                 {:frets renderable-tab}
-                                 )
-                        :instrument {
-                                     :strings 6
-                                     :fretsOnChord 5
-                                     :name "Guitar"
-                                     :tunings {:standard []}
-                                     }}])
-
-(defn render-tab [chord]
-  (let [tab-as-int (map #(if (or (= % "-") (= % "0")) 99
-                          (read-string %)) (:tab chord))]
-    (let [min-finger (apply min (filter #(not (= 99 %)) tab-as-int))
-          max-finger (apply max (filter #(not (= 99 %)) tab-as-int))]
-      (if (< max-finger 4)
-          (render-tab-chart (map #(if (= % "-") -1
-                                   (read-string %))
-                                 (:tab chord) ) 0)
-
-        (render-tab-chart (map #(if (= % "-") -1
-                                 (max (- (read-string %) min-finger -1) 0))
-                               (:tab chord) ) min-finger)))))
-
-
 (defn render-chord-grid-item [chord]
   [:div {:class "card chord-grid-item-style"
          :on-click #(chord-item-on-click chord)}
@@ -190,7 +146,7 @@
     (render-tab-row (:notes chord))
     (render-tab-row (:intervals chord))
     (render-tab-row (:tab chord))
-    [render-tab chord]]])
+    [render-tab-chart chord]]])
 
 (defn render-chord-grid []
   (let [chord-variations (chord-generator @chord-data @instrument-data)]
