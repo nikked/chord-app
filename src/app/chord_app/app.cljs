@@ -17,6 +17,21 @@
                                :intervals [0 5 10 15 19 24]
                                :root 4}))
 
+(defn get-synth []
+  (let [synth (tone/Synth.)]
+    (.toMaster synth)))
+
+
+(defn play-chord [notes]
+  (if @enable-sound
+      (let [timeout (atom 0)]
+        (doseq [note notes]
+          (js/setTimeout
+           #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
+           @timeout)
+          (swap! timeout #(+ 110 %))))
+    ))
+
 (defn handle-note-dropdown-on-click [new-root]
   (let [intervals (:intervals @chord-data)]
     (reset! chord-data {:intervals intervals
@@ -197,21 +212,6 @@
      (map (fn [chord]
             [:div {:class "col-lg-2 col-md-3 col-sm-4 col-6" :key (str chord)}
              (chord-grid-item chord)]) chord-variations)]))
-
-(defn get-synth []
-  (let [synth (tone/Synth.)]
-    (.toMaster synth)))
-
-(defn play-chord [notes]
-  (if @enable-sound
-      (let [timeout (atom 0)]
-        (doseq [note notes]
-          (js/setTimeout
-           #(.triggerAttackRelease (get-synth) (get tone-js-pitches note) "1")
-           @timeout)
-          (swap! timeout #(+ 110 %))))
-    ))
-
 
 (defn play-default-chord []
   (let [notes (sort (map #(+ 12 % (:root @chord-data)) (:intervals @chord-data)))]
