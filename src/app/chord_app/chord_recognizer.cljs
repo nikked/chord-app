@@ -1,28 +1,14 @@
-(ns app.chord-app.chord-recognizer)
+(ns app.chord-app.chord-recognizer
+  (:require
+   [app.chord-app.consts :refer [notes]]))
 
 (defn append-to-string
   [old-string appendable]
   (str old-string " " appendable))
 
-(def notes {
-            0 "C"
-            1 "C#"
-            2 "D"
-            3 "D#"
-            4 "E"
-            5 "F"
-            6 "F#"
-            7 "G"
-            8 "G#"
-            9 "A"
-            10 "Bb"
-            11 "H"
-            })
-
 (defn chord-recognizer [chord]
   "Returns human understandable chord notation such as E min 9"
-  (let [notes ["C" "C#" "D" "D#" "E" "F" "F#" "G" "G#" "A" "Bb" "H"]
-        intervals (get chord :intervals)
+  (let [intervals (get chord :intervals)
         root (get chord :root)
         chord-string (atom (get notes (get chord :root)))
         ]
