@@ -84,6 +84,11 @@ ul {
   margin-top: 20px;
 }
 
+.enable-sound-card-style {
+  padding: 5px;
+  max-width: 300px;
+}
+
 .tab-row-style {
   padding-left: 17px;
   padding-right: 17px;

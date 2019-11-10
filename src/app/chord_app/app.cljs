@@ -49,13 +49,34 @@
     (if (contains? intervals value)
         "btn btn-primary" "btn btn-secondary")))
 
+(defn render-enable-sound-button []
+  (if @enable-sound
+      [:button {:type "button"
+                :class "btn btn-danger btn-sm"
+                :onClick #(handle-enable-sound-button-on-click)}
+       "Disable sound"]
+    [:button {:type "button"
+              :class "btn btn-success btn-sm"
+              :onClick #(handle-enable-sound-button-on-click)}
+     "Enable sound"]))
+
 
 (defn render-chord-name []
   (let [chord-name (chord-recognizer @chord-data)
         chord-variations (chord-generator @chord-data @instrument-data)]
-    [:div {:class "col-md-5 text-center chord-name-style"}
-     [:h1 chord-name]
-     [:h3 (str (count chord-variations) " variations")]]))
+    [:div {:class "col-md-5 text-center"}
+     [:div {:class "card enable-sound-card-style text-left hidden-xs-down"}
+      [:div {:class "card-body"}
+       [:strong "Listen to your chords!"]
+       [:div
+        "Enable sound and click on a chord"]
+       [:div (render-enable-sound-button)]
+       ]]
+     [:h1 {:class "chord-name-style"} chord-name]
+     [:h3 (str (count chord-variations) " variations")]
+
+     ]
+    ))
 
 
 (defn render-instrument-dropdown []
@@ -155,22 +176,9 @@
             [:div {:class "col-lg-2 col-md-3 col-sm-4 col-6" :key (str chord)}
              (render-chord-grid-item chord)]) chord-variations)]))
 
-(defn render-enable-sound-button []
-  (if @enable-sound
-      [:button {:type "button"
-                :class "btn btn-primary"
-                :onClick #(handle-enable-sound-button-on-click)}
-       "Disable sound"]
-    [:button {:type "button"
-              :class "btn btn-primary"
-              :onClick #(handle-enable-sound-button-on-click)}
-     "Enable sound"]))
-
-
 (defn app []
   (play-default-chord)
   [:div {:class "container"}
-   (render-enable-sound-button)
    [:div {:class "row"}
     [render-chord-name]
     [render-selectors]
