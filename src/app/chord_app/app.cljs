@@ -52,7 +52,7 @@
 
 (defn render-chord-name []
   (let [chord-name (chord-recognizer @chord-data)
-        chord-variations (chord-generator @chord-data)]
+        chord-variations (chord-generator @chord-data @instrument-data)]
     [:div {:class "col-md-5 text-center chord-name-style"}
      [:h1 chord-name]
      [:h3 (str (count chord-variations) " variations")]]))
