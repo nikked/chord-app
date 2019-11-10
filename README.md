@@ -1,7 +1,7 @@
 # Chord app
 This repository contains the source code for the [chord app that I have hosted on my website. ](https://nikke.io/#chord_app)  It is a fun tool I built for myself to support my music hobby. In a nutshell, it makes my guitar playing more versatile and expressive. I built the tool with [ClojureScript](https://clojurescript.org/) and [reagent](https://github.com/reagent-project/reagent).
 
-The core idea is simple: any given chord can be played in many different positions in the neck of the guitar. These variations make your playing sound a lot richer. It is amazing how different these variations can sound! To get an idea, please navigate [to the app](https://nikke.io/#chord_app) and listen to some of the variations!
+The core idea is simple: any given chord can be played in many different positions in the neck of the guitar. These variations make your playing sound a lot less boring. It is amazing how different these variations can sound! To get an idea, please navigate [to the app](https://nikke.io/#chord_app) and listen to some of the variations!
 
 ### Contents
 
